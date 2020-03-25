@@ -92,7 +92,6 @@ import java.util.Scanner;
  * @author slava
  */
 public class Converter extends JFrame {
-        public LookAndFeel lf = null;
         public Converter() throws IOException{
         DateTimeFormatter dtf = DateTimeFormatter
                 .ofPattern("dd/MMMM/yyyy hh:mm:ss");
@@ -190,6 +189,7 @@ public class Converter extends JFrame {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                SwingUtilities.updateComponentTreeUI(panel);
+                SwingUtilities.updateComponentTreeUI(menuBar);
             }
             });
         
@@ -316,38 +316,13 @@ public class Converter extends JFrame {
         }
       
     public static void main(String[] args) {
-            try {
-                LookAndFeel hiberbeen = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/Hiberbee.theme.json"));
-                LookAndFeel solarizedLight = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/solarized_light_theme.theme.json"));
-                LookAndFeel solarizedDark = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/solarized_dark_theme.theme.json"));
-                Map<String,LookAndFeel> styleMap = new HashMap<>();
-                styleMap.put("Hiberbee", hiberbeen);
-                styleMap.put("SolarizedLight", solarizedLight);
-                styleMap.put("SolarizedDark", solarizedDark);
-                BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-                String st = br.readLine();
-                for(Entry<String,LookAndFeel> e:styleMap.entrySet()){
-                    if(e.getKey().equals(st)){             
-                        try {
-                            UIManager.setLookAndFeel(e.getValue());
-                            System.out.println("Тема применена");
-                        } catch (UnsupportedLookAndFeelException ex) {
-                            Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                }
-            } catch (IOException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ParseException ex) {
-                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+            try {              
+                UIManager.setLookAndFeel(IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/Hiberbee.theme.json")));
+            }catch(UnsupportedLookAndFeelException e){
+                System.err.println("Тема не найдена");
+            }catch(IOException e1){
+                System.err.println("Ошибка чтения файла с темой");
             }
-//        IntelliJTheme.install(Converter.class.getResourceAsStream(
-//    "/Theme/Hiberbee.theme.json" ));
-//        try{
-//            UIManager.setLookAndFeel("/Theme/Hiberbee.theme.json");
-//        }catch(Exception e){
-//            
-//        }
          SwingUtilities.invokeLater(()->{
                 try {
                     new Converter();
