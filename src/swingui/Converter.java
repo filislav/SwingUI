@@ -164,6 +164,7 @@ public class Converter extends JFrame {
         styleMap.put("Hiberbee", hiberbeen);
         styleMap.put("SolarizedLight", solarizedLight);
         styleMap.put("SolarizedDark", solarizedDark);
+        model.setSelectedItem(UIManager.getLookAndFeel().getName());
         listThemes.setModel(model);
         for(Entry<String,LookAndFeel>entry:styleMap.entrySet()){
             model.addElement(entry.getKey());            
@@ -172,27 +173,21 @@ public class Converter extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 String s = (String)listThemes.getSelectedItem();
-                for(Entry<String,LookAndFeel> entry1:styleMap.entrySet()){
-                    if(s.equals(entry1.getKey())){
+                LookAndFeel laf = styleMap.get(s);
+                if(laf != null){
                         try {
-                            UIManager.setLookAndFeel(entry1.getValue());
+                            UIManager.setLookAndFeel(laf);
+                            SwingUtilities.invokeLater(()->{
+                               SwingUtilities.updateComponentTreeUI(panel);
+                               SwingUtilities.updateComponentTreeUI(menuBar);
+                            });
                         } catch (UnsupportedLookAndFeelException ex1) {
                             Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex1);
                         }
                 }
             }
-        }
         };
         listThemes.addActionListener(al);
-        
-            UIManager.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-               SwingUtilities.updateComponentTreeUI(panel);
-                SwingUtilities.updateComponentTreeUI(menuBar);
-            }
-            });
-        
         
         GridBagConstraints constraints1 = new GridBagConstraints();
         constraints1.fill = GridBagConstraints.HORIZONTAL;
