@@ -5,6 +5,7 @@
  */
 package swingui;
 
+import com.formdev.flatlaf.FlatDarculaLaf;
 import java.awt.Color;
 import java.awt.Component;
 import static java.awt.Component.TOP_ALIGNMENT;
@@ -72,6 +73,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JMenu;
 import com.formdev.flatlaf.FlatDarkLaf;
+import com.formdev.flatlaf.FlatLightLaf;
 import com.formdev.flatlaf.IntelliJTheme;
 import com.formdev.flatlaf.json.ParseException;
 import java.beans.PropertyChangeEvent;
@@ -157,13 +159,16 @@ public class Converter extends JFrame {
         labelTitle.setForeground(Color.GRAY);
         JComboBox <String> listThemes = new JComboBox<>();
         DefaultComboBoxModel <String> model = new DefaultComboBoxModel<>();
-        LookAndFeel hiberbeen = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/Hiberbee.theme.json"));
-        LookAndFeel solarizedLight = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/solarized_light_theme.theme.json"));
-        LookAndFeel solarizedDark = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/solarized_dark_theme.theme.json"));
+        LookAndFeel hiberbee = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/Hiberbee.theme.json"));
+//        LookAndFeel solarizedLight = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/solarized_light_theme.theme.json"));
+//        LookAndFeel solarizedDark = IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/solarized_dark_theme.theme.json"));
         Map<String,LookAndFeel> styleMap = new HashMap<>();
-        styleMap.put("Hiberbee", hiberbeen);
-        styleMap.put("SolarizedLight", solarizedLight);
-        styleMap.put("SolarizedDark", solarizedDark);
+            System.out.println(hiberbee);
+            
+        styleMap.put("FlatDark", new FlatDarkLaf());
+        styleMap.put("FlatDarcula", new FlatDarculaLaf());
+        styleMap.put("FlatLight", new FlatLightLaf());
+        styleMap.put(hiberbee.getName(), hiberbee);
         model.setSelectedItem(UIManager.getLookAndFeel().getName());
         listThemes.setModel(model);
         for(Entry<String,LookAndFeel>entry:styleMap.entrySet()){
@@ -183,7 +188,13 @@ public class Converter extends JFrame {
                             });
                         } catch (UnsupportedLookAndFeelException ex1) {
                             Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex1);
-                        }
+//                        }catch(ClassNotFoundException e1){
+//                            
+//                        } catch (InstantiationException ex1) {
+//                        Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex1);
+//                    } catch (IllegalAccessException ex1) {
+//                        Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex1);
+                    }
                 }
             }
         };
@@ -311,13 +322,19 @@ public class Converter extends JFrame {
         }
       
     public static void main(String[] args) {
-            try {              
-                UIManager.setLookAndFeel(IntelliJTheme.createLaf(Converter.class.getResourceAsStream("/Theme/Hiberbee.theme.json")));
-            }catch(UnsupportedLookAndFeelException e){
-                System.err.println("Тема не найдена");
-            }catch(IOException e1){
-                System.err.println("Ошибка чтения файла с темой");
+                FlatDarkLaf lf = new FlatDarkLaf();               
+            try {
+                UIManager.setLookAndFeel(lf);
+//            } catch (ClassNotFoundException ex) {
+//                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (InstantiationException ex) {
+//                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+//            } catch (IllegalAccessException ex) {
+//                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (UnsupportedLookAndFeelException ex) {
+                Logger.getLogger(Converter.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println(FlatDarkLaf.class.getName());
          SwingUtilities.invokeLater(()->{
                 try {
                     new Converter();
@@ -327,3 +344,4 @@ public class Converter extends JFrame {
          }); 
     }
 }
+
